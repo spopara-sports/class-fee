@@ -69,37 +69,42 @@
   .preview-btn { flex: 1.5; background-color: #0d6efd; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
   .preview-btn:active { transform: scale(0.95); }
 
-  /* モーダル・テンキー */
-  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; }
-  .modal-content { background: #fff; width: 100%; max-width: 600px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 15px; max-height: 95vh; overflow-y: auto; }
+  /* V14: ダーク化＆巨大化モーダル */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; }
+  .modal-content { background: #fff; width: 100%; max-width: 600px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 10px; max-height: 98vh; overflow-y: auto; }
   
-  .modal-top-area { display: flex; flex-direction: column; gap: 10px; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
-  .modal-title { font-size: 18px; font-weight: bold; margin: 0; color: #343a40; text-align: center; }
-  .modal-items { background: #f8f9fa; border-radius: 8px; padding: 10px; font-size: 14px; max-height: 150px; overflow-y: auto; }
+  .modal-top-area { display: flex; flex-direction: column; gap: 8px; border-bottom: 2px solid #e9ecef; padding-bottom: 8px; }
+  .modal-title { font-size: 20px; font-weight: bold; margin: 0; color: #343a40; text-align: center; }
+  .modal-items { background: #f8f9fa; border-radius: 8px; padding: 10px; font-size: 14px; max-height: 110px; overflow-y: auto; }
   .modal-item-row { display: flex; justify-content: space-between; margin-bottom: 6px; border-bottom: 1px dashed #dee2e6; padding-bottom: 4px; }
   .modal-discount { color: #dc3545; font-weight: bold; }
   .person-divider { font-weight: bold; background: #e9ecef; color: #495057; padding: 2px 8px; border-radius: 4px; margin: 8px 0 4px 0; font-size: 12px; }
   
-  .calc-section { display: flex; flex-direction: column; gap: 10px; background: #f0fdf4; padding: 15px; border-radius: 8px; border: 2px solid #198754; }
+  .calc-section { display: flex; flex-direction: column; gap: 8px; background: #f0fdf4; padding: 15px; border-radius: 8px; border: 2px solid #198754; }
   .money-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 18px; font-weight: bold; }
-  .money-val { font-size: 28px; font-family: monospace; }
+  .money-val { font-size: 34px; font-family: monospace; letter-spacing: -1px; }
   .total-color { color: #dc3545; }
   .receive-color { color: #0056b3; }
-  .change-color { color: #198754; font-size: 32px; }
+  .change-color { color: #198754; font-size: 42px; }
   
-  .predictive-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 5px; }
-  .predictive-btns button { flex: 1; min-width: 80px; padding: 10px; font-size: 16px; font-weight: bold; border-radius: 6px; border: 1px solid #0d6efd; background: #e7f1ff; color: #0d6efd; cursor: pointer; }
-  .predictive-btns button:active { background: #0d6efd; color: white; }
+  /* 追加ボタン・予測ボタン */
+  .add-btns { display: flex; gap: 8px; margin-bottom: 2px; }
+  .add-btns button { flex: 1; padding: 10px; font-size: 18px; font-weight: bold; border-radius: 6px; border: 2px solid #198754; background: #e8f5e9; color: #198754; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  .add-btns button:active { background: #198754; color: white; transform: scale(0.95); }
+
+  .predictive-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .predictive-btns button { flex: 1; min-width: 70px; padding: 10px; font-size: 16px; font-weight: bold; border-radius: 6px; border: 1px solid #0d6efd; background: #e7f1ff; color: #0d6efd; cursor: pointer; }
+  .predictive-btns button:active { background: #0d6efd; color: white; transform: scale(0.95); }
   
-  .numpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-  .numpad-grid button { padding: 15px; font-size: 22px; font-weight: bold; border-radius: 8px; border: 1px solid #ced4da; background: #fff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  .numpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 5px; }
+  .numpad-grid button { padding: 14px; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid #ced4da; background: #fff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
   .numpad-grid button:active { background: #e9ecef; transform: scale(0.95); }
   .numpad-grid .btn-c { background: #f8d7da; color: #dc3545; border-color: #f5c2c7; }
   .numpad-grid .btn-del { background: #e2e3e5; color: #383d41; }
   
   .modal-actions { display: flex; gap: 10px; margin-top: 5px; }
   .modal-btn-back { flex: 1; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 8px; border: none; background: #6c757d; color: white; cursor: pointer; }
-  .modal-btn-complete { flex: 2; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 8px; border: none; background: #198754; color: white; cursor: pointer; box-shadow: 0 4px 6px rgba(25, 135, 84, 0.3); transition: 0.2s; }
+  .modal-btn-complete { flex: 2; padding: 15px; font-size: 20px; font-weight: bold; border-radius: 8px; border: none; background: #198754; color: white; cursor: pointer; box-shadow: 0 4px 6px rgba(25, 135, 84, 0.3); transition: 0.2s; }
   .modal-btn-complete:disabled { background: #adb5bd; cursor: not-allowed; box-shadow: none; }
 
   #settings-screen { display: none; background: white; padding: 15px; border-radius: 12px; }
@@ -234,12 +239,21 @@
     <div class="calc-section">
       <div class="money-row">
         <span>ご請求額:</span>
-        <span class="money-val total-color" id="modal-total-price">0 <span style="font-size:14px">円</span></span>
+        <span class="money-val total-color" id="modal-total-price">0 <span style="font-size:16px">円</span></span>
       </div>
       <div class="money-row">
         <span>お預かり:</span>
-        <span class="money-val receive-color" id="modal-received-price">0 <span style="font-size:14px">円</span></span>
+        <span class="money-val receive-color" id="modal-received-price">0 <span style="font-size:16px">円</span></span>
       </div>
+      
+      <!-- 加算ボタン -->
+      <div class="add-btns">
+        <button onclick="numpadAdd(1000)">+ 1,000</button>
+        <button onclick="numpadAdd(500)">+ 500</button>
+        <button onclick="numpadAdd(100)">+ 100</button>
+      </div>
+
+      <!-- 予測ボタン -->
       <div class="predictive-btns" id="predictive-btns-container">
         <!-- JSでボタンを自動生成 -->
       </div>
@@ -260,9 +274,9 @@
         <button class="btn-c" style="grid-column: 1 / -1;" onclick="numpadClear()">クリア (C)</button>
       </div>
 
-      <div class="money-row" style="margin-top: 10px; border-top: 1px solid #ccc; padding-top: 10px;">
+      <div class="money-row" style="margin-top: 5px; border-top: 1px solid #ccc; padding-top: 5px;">
         <span>おつり:</span>
-        <span class="money-val change-color" id="modal-change-price">0 <span style="font-size:14px">円</span></span>
+        <span class="money-val change-color" id="modal-change-price">0 <span style="font-size:16px">円</span></span>
       </div>
     </div>
 
@@ -274,7 +288,6 @@
 </div>
 
 <script>
-  // 大人の教室を上、子供の教室を下に変更
   const initData = [
     {"id":101, "isDivider": true, "name": "▼ 大人の教室", "collapseId": "adult"},
     {"id":17,"name":"L火","color":"#dda0dd","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"adult"},
@@ -318,9 +331,12 @@
   let checkoutReceived = 0;
   
   let collapsedGroups = new Set();
+  
+  // V14 手打ち入力中かどうかのフラグ
+  let isManualInput = false; 
 
   function init() {
-    let saved = localStorage.getItem('swimFacilityCoursesV13') || localStorage.getItem('swimFacilityCoursesV12') || localStorage.getItem('swimFacilityCoursesV11') || localStorage.getItem('swimFacilityCoursesV10') || localStorage.getItem('swimFacilityCoursesV9') || localStorage.getItem('swimFacilityCoursesV8') || localStorage.getItem('swimFacilityCoursesV7');
+    let saved = localStorage.getItem('swimFacilityCoursesV14') || localStorage.getItem('swimFacilityCoursesV13') || localStorage.getItem('swimFacilityCoursesV12') || localStorage.getItem('swimFacilityCoursesV11') || localStorage.getItem('swimFacilityCoursesV10') || localStorage.getItem('swimFacilityCoursesV9') || localStorage.getItem('swimFacilityCoursesV8') || localStorage.getItem('swimFacilityCoursesV7');
 
     if (saved) {
       courses = JSON.parse(saved);
@@ -338,7 +354,7 @@
   }
 
   function saveData() {
-    localStorage.setItem('swimFacilityCoursesV13', JSON.stringify(courses));
+    localStorage.setItem('swimFacilityCoursesV14', JSON.stringify(courses));
   }
 
   function switchTab(tab) {
@@ -516,9 +532,12 @@
     }
     
     checkoutTotal = accumulatedTotal + parseInt(document.getElementById('subtotal-display').innerText.replace(/,/g, ''), 10);
-    checkoutReceived = checkoutTotal;
     
-    document.getElementById('modal-total-price').innerHTML = `${checkoutTotal.toLocaleString()} <span style="font-size:14px">円</span>`;
+    // 開いた直後は「丁度」が設定されている状態
+    checkoutReceived = checkoutTotal;
+    isManualInput = false; 
+    
+    document.getElementById('modal-total-price').innerHTML = `${checkoutTotal.toLocaleString()} <span style="font-size:16px">円</span>`;
     
     generatePredictiveButtons();
     updateChangeDisplay();
@@ -530,25 +549,21 @@
     document.getElementById('customer-modal').style.display = 'none';
   }
 
-  // 予測ボタンのロジック改善
   function generatePredictiveButtons() {
     const container = document.getElementById('predictive-btns-container');
     container.innerHTML = '';
     if (checkoutTotal === 0) return;
 
-    let options = [checkoutTotal]; // 丁度
+    let options = [checkoutTotal]; 
     
-    // 千円単位切り上げ
     let nextThousand = Math.ceil(checkoutTotal / 1000) * 1000;
     if (nextThousand > checkoutTotal) {
         options.push(nextThousand);
     }
     
-    // 5000円と10000円は、請求額より大きければ常に出す
     if (checkoutTotal < 5000) options.push(5000);
     if (checkoutTotal < 10000) options.push(10000);
 
-    // 重複を消して昇順ソート
     options = [...new Set(options)].sort((a, b) => a - b);
 
     options.forEach(amt => {
@@ -556,18 +571,34 @@
         btn.innerText = (amt === checkoutTotal) ? `${amt.toLocaleString()}円(丁度)` : `${amt.toLocaleString()}円`;
         btn.onclick = () => {
             checkoutReceived = amt;
+            isManualInput = true; // 予測ボタンを押した時点で手動入力扱い（次打つときは追加になる等）
             updateChangeDisplay();
         };
         container.appendChild(btn);
     });
   }
 
+  // 加算ボタンの処理 (+1000, +500, +100)
+  function numpadAdd(amount) {
+      // 丁度の状態から足す場合もそのまま加算する（例：5700円 + 500円 = 6200円預かり）
+      checkoutReceived += amount;
+      isManualInput = true;
+      updateChangeDisplay();
+  }
+
+  // テンキー入力処理
   function numpadInput(numStr) {
+    // 最初の1タップ目は「丁度」の金額を消して0から打ち直すUX
+    if (!isManualInput) {
+        checkoutReceived = 0;
+        isManualInput = true;
+    }
+    
     if (checkoutReceived === 0 && (numStr === '0' || numStr === '00')) return;
     
     let currentStr = checkoutReceived.toString();
-    if (checkoutReceived === checkoutTotal && currentStr.length >= 3) {
-       currentStr = "";
+    if (checkoutReceived === 0) {
+        currentStr = ""; 
     }
     
     currentStr += numStr;
@@ -578,32 +609,38 @@
   }
 
   function numpadDelete() {
-    let currentStr = checkoutReceived.toString();
-    if (currentStr.length <= 1) {
+    if (!isManualInput) {
         checkoutReceived = 0;
+        isManualInput = true;
     } else {
-        checkoutReceived = parseInt(currentStr.slice(0, -1), 10);
+        let currentStr = checkoutReceived.toString();
+        if (currentStr.length <= 1) {
+            checkoutReceived = 0;
+        } else {
+            checkoutReceived = parseInt(currentStr.slice(0, -1), 10);
+        }
     }
     updateChangeDisplay();
   }
 
   function numpadClear() {
     checkoutReceived = 0;
+    isManualInput = true;
     updateChangeDisplay();
   }
 
   function updateChangeDisplay() {
-    document.getElementById('modal-received-price').innerHTML = `${checkoutReceived.toLocaleString()} <span style="font-size:14px">円</span>`;
+    document.getElementById('modal-received-price').innerHTML = `${checkoutReceived.toLocaleString()} <span style="font-size:16px">円</span>`;
     
     let change = checkoutReceived - checkoutTotal;
     const changeEl = document.getElementById('modal-change-price');
     const completeBtn = document.getElementById('btn-complete-checkout');
     
     if (change < 0) {
-        changeEl.innerHTML = `<span style="color: #dc3545; font-size: 20px;">不足 ${Math.abs(change).toLocaleString()} 円</span>`;
+        changeEl.innerHTML = `<span style="color: #dc3545; font-size: 24px;">不足 ${Math.abs(change).toLocaleString()} 円</span>`;
         completeBtn.disabled = true; 
     } else {
-        changeEl.innerHTML = `${change.toLocaleString()} <span style="font-size:14px">円</span>`;
+        changeEl.innerHTML = `${change.toLocaleString()} <span style="font-size:16px">円</span>`;
         completeBtn.disabled = false;
     }
   }
