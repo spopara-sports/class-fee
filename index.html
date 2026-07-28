@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>水泳教室 料金計算ツール V8</title>
+<title>水泳教室 料金計算ツール V9</title>
 <style>
   :root { --primary: #0056b3; --success: #198754; --bg: #f8f9fa; --text: #212529; --card-bg: #ffffff; }
   body { font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -16,7 +16,6 @@
   
   .container { max-width: 1000px; margin: 15px auto; padding: 0 10px; padding-bottom: 220px; }
   
-  /* V8: スクロール時に上に固定（ピタッと追従）する設定 */
   .control-panel { 
     display: flex; justify-content: space-between; align-items: stretch; gap: 10px; flex-wrap: wrap; 
     position: sticky; top: 46px; z-index: 990; background-color: var(--bg); 
@@ -65,8 +64,21 @@
   .action-buttons { display: flex; gap: 8px; }
   .btn-add-person { flex: 1; background-color: #ffc107; color: #000; border: none; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
   .btn-add-person:active { transform: scale(0.95); }
-  .reset-btn { flex: 1.5; background-color: #198754; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-  .reset-btn:active { transform: scale(0.95); }
+  .preview-btn { flex: 1.5; background-color: #0d6efd; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  .preview-btn:active { transform: scale(0.95); }
+
+  /* V9: お客様確認モーダル */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
+  .modal-content { background: #fff; width: 100%; max-width: 500px; border-radius: 12px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 15px; }
+  .modal-title { font-size: 20px; font-weight: bold; text-align: center; color: #343a40; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; margin-top: 0; }
+  .modal-items { background: #f8f9fa; border-radius: 8px; padding: 15px; font-size: 16px; max-height: 40vh; overflow-y: auto; }
+  .modal-item-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed #dee2e6; padding-bottom: 4px; }
+  .modal-discount { color: #dc3545; font-weight: bold; }
+  .modal-grand-total { text-align: center; font-size: 24px; font-weight: bold; margin: 10px 0; }
+  .modal-grand-total span { font-size: 40px; color: #dc3545; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 10px; }
+  .modal-btn-back { flex: 1; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 8px; border: none; background: #6c757d; color: white; cursor: pointer; }
+  .modal-btn-complete { flex: 2; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 8px; border: none; background: #198754; color: white; cursor: pointer; box-shadow: 0 4px 6px rgba(25, 135, 84, 0.3); }
 
   #settings-screen { display: none; background: white; padding: 15px; border-radius: 12px; }
   .settings-section { margin-bottom: 30px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; overflow-x: auto; }
@@ -97,7 +109,7 @@
 <body>
 
 <header>
-  <h1>🏊‍♂️ 水泳レジ V8</h1>
+  <h1>🏊‍♂️ 水泳レジ V9</h1>
   <div class="tabs">
     <button id="tab-calc" class="active" onclick="switchTab('calc')">受付画面</button>
     <button id="tab-settings" onclick="switchTab('settings')">⚙️ 設定</button>
@@ -106,7 +118,6 @@
 
 <div class="container">
   <div id="calc-screen">
-    <!-- スクロールしても消えない部分 -->
     <div class="control-panel">
       <div class="member-toggle">
         <button id="toggle-member" class="active" onclick="setMemberType(true)">👤 会員</button>
@@ -186,12 +197,30 @@
     
     <div class="action-buttons">
       <button class="btn-add-person" onclick="addNextPerson()">➕ 兄弟合算</button>
-      <button class="reset-btn" onclick="checkout()">✅ 会計完了</button>
+      <button class="preview-btn" onclick="openPreviewModal()">👀 お会計・確認へ</button>
+    </div>
+  </div>
+</div>
+
+<!-- V9: お客様確認用モーダル -->
+<div id="customer-modal" class="modal-overlay">
+  <div class="modal-content">
+    <h2 class="modal-title">お支払い内容のご確認</h2>
+    <div class="modal-items" id="modal-item-list">
+      <!-- JavaScriptで内訳を生成します -->
+    </div>
+    <div class="modal-grand-total">
+      合計 <span id="modal-total-price">0</span> 円
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn-back" onclick="closePreviewModal()">戻る</button>
+      <button class="modal-btn-complete" onclick="checkout()">✅ 会計完了</button>
     </div>
   </div>
 </div>
 
 <script>
+  // V9: 大元データの更新（M火を削除し、一番下に市水中歩行を追加）
   const initData = [
     {"id":100, "isDivider": true, "name": "▼ 子供の教室"},
     {"id":1,"name":"O土","color":"#dddddd","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
@@ -205,7 +234,6 @@
     {"id":9,"name":"B金","color":"#ffe45e","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
     {"id":10,"name":"B土","color":"#ffe45e","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
     {"id":101, "isDivider": true, "name": "▼ 大人の教室"},
-    {"id":16,"name":"M火","color":"#90ee90","priceMember":3000,"priceVisitor":3000,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
     {"id":17,"name":"L火","color":"#dda0dd","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
     {"id":18,"name":"L木","color":"#dda0dd","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
     {"id":19,"name":"F水","color":"#dda0dd","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
@@ -215,7 +243,8 @@
     {"id":23,"name":"E水","color":"#dda0dd","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
     {"id":24,"name":"W木","color":"#dda0dd","priceMember":3800,"priceVisitor":4800,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
     {"id":25,"name":"H金","color":"#dda0dd","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
-    {"id":26,"name":"e木","color":"#dda0dd","priceMember":2400,"priceVisitor":3000,"count":0,"isFreeEligible":true,"isFull":false,"notice":""}
+    {"id":26,"name":"e木","color":"#dda0dd","priceMember":2400,"priceVisitor":3000,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
+    {"id":16,"name":"市水中歩行","color":"#90ee90","priceMember":3000,"priceVisitor":3000,"count":0,"isFreeEligible":false,"isFull":false,"notice":""}
   ];
 
   let courses = [];
@@ -226,13 +255,15 @@
   let personIndex = 1;
   let accumulatedTotal = 0;
   let pendingCounts = {}; 
+  
+  // V9 モーダル用データ保持
+  let currentDiscountName = "";
+  let currentDiscountAmount = 0;
 
   function init() {
-    // V8用に保存キーを更新
-    const saved = localStorage.getItem('swimFacilityCoursesV8');
+    const saved = localStorage.getItem('swimFacilityCoursesV9');
     if (saved) {
       courses = JSON.parse(saved);
-      // 新規フィールド(満員/お知らせ)追加互換処理
       courses.forEach(c => { 
         if(c.isFreeEligible === undefined) c.isFreeEligible = true; 
         if(c.isFull === undefined) c.isFull = false;
@@ -247,7 +278,7 @@
   }
 
   function saveData() {
-    localStorage.setItem('swimFacilityCoursesV8', JSON.stringify(courses));
+    localStorage.setItem('swimFacilityCoursesV9', JSON.stringify(courses));
   }
 
   function switchTab(tab) {
@@ -333,7 +364,7 @@
   }
 
   function toggleCourse(id, element, isFull) {
-    if (isFull) return; // 満員ならクリック無効
+    if (isFull) return; 
     if (selectedIds.has(id)) { selectedIds.delete(id); } else { selectedIds.add(id); }
     renderCalc(); 
   }
@@ -341,16 +372,16 @@
   function updateTotal() {
     let subtotal = 0;
     let maxPrice = 0;
-    let maxCourseName = "";
+    currentDiscountName = "";
+    currentDiscountAmount = 0;
     
     courses.forEach(c => {
       if (!c.isDivider && selectedIds.has(c.id)) {
         const price = isMemberMode ? Number(c.priceMember) : Number(c.priceVisitor);
         subtotal += price;
-        // 「無料対象(isFreeEligible)」 かつ 「会員」の場合のみ、最大値更新の候補にする
         if (c.isFreeEligible && price > maxPrice) {
           maxPrice = price;
-          maxCourseName = c.name;
+          currentDiscountName = c.name;
         }
       }
     });
@@ -358,15 +389,56 @@
     const noteEl = document.getElementById('free-note');
     if (isFirstTimeFree && isMemberMode && selectedIds.size > 0 && maxPrice > 0) {
       subtotal -= maxPrice;
-      noteEl.innerText = `※ 無料: ${maxCourseName}`;
+      currentDiscountAmount = maxPrice;
+      noteEl.innerText = `※ 無料: ${currentDiscountName}`;
       noteEl.style.display = 'inline-block';
     } else {
       noteEl.style.display = 'none';
+      currentDiscountAmount = 0;
     }
 
     document.getElementById('subtotal-display').innerText = subtotal.toLocaleString();
     const finalTotal = accumulatedTotal + subtotal;
     document.getElementById('total-display').innerText = finalTotal.toLocaleString();
+  }
+
+  // V9: モーダルを開く処理
+  function openPreviewModal() {
+    if (selectedIds.size === 0 && accumulatedTotal === 0) {
+        alert("コースが選択されていません！");
+        return;
+    }
+    
+    const listEl = document.getElementById('modal-item-list');
+    listEl.innerHTML = '';
+    
+    // 合算分がある場合
+    if (accumulatedTotal > 0) {
+        listEl.innerHTML += `<div class="modal-item-row"><span>兄弟合算分（前の方まで）</span> <span>¥${accumulatedTotal.toLocaleString()}</span></div>`;
+    }
+    
+    // 現在選択中のコース
+    courses.forEach(c => {
+      if (!c.isDivider && selectedIds.has(c.id)) {
+        const price = isMemberMode ? Number(c.priceMember) : Number(c.priceVisitor);
+        listEl.innerHTML += `<div class="modal-item-row"><span>${c.name} (${isMemberMode ? '会員' : '非会員'})</span> <span>¥${price.toLocaleString()}</span></div>`;
+      }
+    });
+    
+    // 割引の表示
+    if (currentDiscountAmount > 0) {
+        listEl.innerHTML += `<div class="modal-item-row modal-discount"><span>🎁 新規無料 (${currentDiscountName})</span> <span>-¥${currentDiscountAmount.toLocaleString()}</span></div>`;
+    }
+    
+    // 合計金額の反映
+    const finalTotal = document.getElementById('total-display').innerText;
+    document.getElementById('modal-total-price').innerText = finalTotal;
+    
+    document.getElementById('customer-modal').style.display = 'flex';
+  }
+
+  function closePreviewModal() {
+    document.getElementById('customer-modal').style.display = 'none';
   }
 
   function addNextPerson() {
@@ -399,9 +471,15 @@
     }
     document.getElementById('current-person-label').innerText = `1人目の小計:`;
     document.getElementById('grand-total-row').style.display = 'none';
-    const btn = document.querySelector('.reset-btn');
-    btn.innerText = '🎉 会計完了！'; btn.style.backgroundColor = '#0dcaf0';
-    setTimeout(() => { btn.innerText = '✅ 会計完了'; btn.style.backgroundColor = '#198754'; renderCalc(); }, 800);
+    
+    // モーダルを閉じる
+    closePreviewModal();
+    
+    const btn = document.querySelector('.preview-btn');
+    const originalText = btn.innerText;
+    const originalBg = btn.style.backgroundColor;
+    btn.innerText = '🎉 会計完了！'; btn.style.backgroundColor = '#198754';
+    setTimeout(() => { btn.innerText = originalText; btn.style.backgroundColor = originalBg; renderCalc(); }, 1000);
   }
 
   function renderSettings() {
@@ -505,6 +583,7 @@
       const parsed = JSON.parse(data);
       if(Array.isArray(parsed)) {
         courses = parsed;
+        // V9用に保存キーを変えてるので即保存
         saveData();
         renderSettings();
         alert("データを読み込みました！");
