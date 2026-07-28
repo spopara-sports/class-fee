@@ -69,7 +69,7 @@
   .preview-btn { flex: 1.5; background-color: #0d6efd; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
   .preview-btn:active { transform: scale(0.95); }
 
-  /* テンキー・おつりモーダル */
+  /* モーダル・テンキー */
   .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; }
   .modal-content { background: #fff; width: 100%; max-width: 600px; border-radius: 12px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 15px; max-height: 95vh; overflow-y: auto; }
   
@@ -80,7 +80,6 @@
   .modal-discount { color: #dc3545; font-weight: bold; }
   .person-divider { font-weight: bold; background: #e9ecef; color: #495057; padding: 2px 8px; border-radius: 4px; margin: 8px 0 4px 0; font-size: 12px; }
   
-  /* お会計エリア（テンキー等） */
   .calc-section { display: flex; flex-direction: column; gap: 10px; background: #f0fdf4; padding: 15px; border-radius: 8px; border: 2px solid #198754; }
   .money-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 18px; font-weight: bold; }
   .money-val { font-size: 28px; font-family: monospace; }
@@ -225,7 +224,6 @@
   </div>
 </div>
 
-<!-- お客様確認・おつり計算モーダル -->
 <div id="customer-modal" class="modal-overlay">
   <div class="modal-content">
     <div class="modal-top-area">
@@ -276,18 +274,8 @@
 </div>
 
 <script>
+  // 大人の教室を上、子供の教室を下に変更
   const initData = [
-    {"id":100, "isDivider": true, "name": "▼ 子供の教室", "collapseId": "child"},
-    {"id":1,"name":"O土","color":"#dddddd","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
-    {"id":2,"name":"A水","color":"#ffb6c1","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
-    {"id":3,"name":"A木","color":"#ffb6c1","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
-    {"id":4,"name":"A金","color":"#ffb6c1","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
-    {"id":5,"name":"A土","color":"#ffb6c1","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
-    {"id":6,"name":"B火","color":"#ffe45e","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
-    {"id":7,"name":"B水","color":"#ffe45e","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
-    {"id":8,"name":"B木","color":"#ffe45e","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
-    {"id":9,"name":"B金","color":"#ffe45e","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
-    {"id":10,"name":"B土","color":"#ffe45e","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
     {"id":101, "isDivider": true, "name": "▼ 大人の教室", "collapseId": "adult"},
     {"id":17,"name":"L火","color":"#dda0dd","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"adult"},
     {"id":18,"name":"L木","color":"#dda0dd","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"adult"},
@@ -299,7 +287,18 @@
     {"id":24,"name":"W木","color":"#dda0dd","priceMember":3800,"priceVisitor":4800,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"adult"},
     {"id":25,"name":"H金","color":"#dda0dd","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"adult"},
     {"id":26,"name":"e木","color":"#dda0dd","priceMember":2400,"priceVisitor":3000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"adult"},
-    {"id":16,"name":"市水中歩行","color":"#90ee90","priceMember":3000,"priceVisitor":3000,"count":0,"isFreeEligible":false,"isFull":false,"notice":"","group":"adult"}
+    {"id":16,"name":"市水中歩行","color":"#90ee90","priceMember":3000,"priceVisitor":3000,"count":0,"isFreeEligible":false,"isFull":false,"notice":"","group":"adult"},
+    {"id":100, "isDivider": true, "name": "▼ 子供の教室", "collapseId": "child"},
+    {"id":1,"name":"O土","color":"#dddddd","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
+    {"id":2,"name":"A水","color":"#ffb6c1","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
+    {"id":3,"name":"A木","color":"#ffb6c1","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
+    {"id":4,"name":"A金","color":"#ffb6c1","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
+    {"id":5,"name":"A土","color":"#ffb6c1","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
+    {"id":6,"name":"B火","color":"#ffe45e","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
+    {"id":7,"name":"B水","color":"#ffe45e","priceMember":4800,"priceVisitor":6000,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
+    {"id":8,"name":"B木","color":"#ffe45e","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
+    {"id":9,"name":"B金","color":"#ffe45e","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"},
+    {"id":10,"name":"B土","color":"#ffe45e","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":"","group":"child"}
   ];
 
   let courses = [];
@@ -315,16 +314,13 @@
   let currentDiscountName = "";
   let currentDiscountAmount = 0;
   
-  // テンキー用変数
   let checkoutTotal = 0;
   let checkoutReceived = 0;
   
-  // 見出しの折りたたみ状態を保存するSet
   let collapsedGroups = new Set();
 
   function init() {
-    // 過去バージョンのデータを引き継ぐための汎用処理
-    let saved = localStorage.getItem('swimFacilityCoursesV12') || localStorage.getItem('swimFacilityCoursesV11') || localStorage.getItem('swimFacilityCoursesV10') || localStorage.getItem('swimFacilityCoursesV9') || localStorage.getItem('swimFacilityCoursesV8') || localStorage.getItem('swimFacilityCoursesV7');
+    let saved = localStorage.getItem('swimFacilityCoursesV13') || localStorage.getItem('swimFacilityCoursesV12') || localStorage.getItem('swimFacilityCoursesV11') || localStorage.getItem('swimFacilityCoursesV10') || localStorage.getItem('swimFacilityCoursesV9') || localStorage.getItem('swimFacilityCoursesV8') || localStorage.getItem('swimFacilityCoursesV7');
 
     if (saved) {
       courses = JSON.parse(saved);
@@ -342,7 +338,7 @@
   }
 
   function saveData() {
-    localStorage.setItem('swimFacilityCoursesV12', JSON.stringify(courses));
+    localStorage.setItem('swimFacilityCoursesV13', JSON.stringify(courses));
   }
 
   function switchTab(tab) {
@@ -408,15 +404,12 @@
 
     courses.forEach((c, index) => {
       if (c.isDivider) {
-        // 折りたたみ用に自動でIDを振る
         currentGroupId = c.collapseId || `group_${index}`; 
         c.collapseId = currentGroupId; 
 
         const divider = document.createElement('div');
         divider.className = 'divider-card';
-        // 折りたたみ状態によって矢印を変える
         const arrow = collapsedGroups.has(currentGroupId) ? '▶︎ ' : '▼ ';
-        // '▼ 'などの記号が元々名前に入っている場合は置換してスッキリさせる
         const cleanName = c.name.replace(/^[▼▶]\s*/, '');
         divider.innerHTML = `<span>${arrow}${cleanName}</span> <span style="font-size:12px; font-weight:normal; color:#aaa;">(タップで開閉)</span>`;
         divider.onclick = () => toggleDividerState(c.collapseId);
@@ -425,8 +418,6 @@
       }
       
       const card = document.createElement('div');
-      
-      // 折りたたみ判定
       const isHidden = c.group && collapsedGroups.has(c.group) || (!c.group && collapsedGroups.has(currentGroupId));
       const hiddenClass = isHidden ? 'hidden-by-divider' : '';
       
@@ -492,16 +483,12 @@
     document.getElementById('total-display').innerText = finalTotal.toLocaleString();
   }
 
-  /* ----------------------------------
-   * テンキー＆お会計モーダルの処理
-   * ---------------------------------- */
   function openPreviewModal() {
     if (selectedIds.size === 0 && accumulatedTotal === 0) {
         alert("コースが選択されていません！");
         return;
     }
     
-    // 内訳リストの生成
     const listEl = document.getElementById('modal-item-list');
     listEl.innerHTML = '';
     
@@ -528,16 +515,12 @@
         }
     }
     
-    // 金額セット
     checkoutTotal = accumulatedTotal + parseInt(document.getElementById('subtotal-display').innerText.replace(/,/g, ''), 10);
-    checkoutReceived = checkoutTotal; // 初期値は「丁度」
+    checkoutReceived = checkoutTotal;
     
     document.getElementById('modal-total-price').innerHTML = `${checkoutTotal.toLocaleString()} <span style="font-size:14px">円</span>`;
     
-    // 予測ボタンの生成
     generatePredictiveButtons();
-    
-    // おつり計算を反映
     updateChangeDisplay();
     
     document.getElementById('customer-modal').style.display = 'flex';
@@ -547,17 +530,23 @@
     document.getElementById('customer-modal').style.display = 'none';
   }
 
-  // 予測ボタンのロジック
+  // 予測ボタンのロジック改善
   function generatePredictiveButtons() {
     const container = document.getElementById('predictive-btns-container');
     container.innerHTML = '';
     if (checkoutTotal === 0) return;
 
     let options = [checkoutTotal]; // 丁度
+    
+    // 千円単位切り上げ
     let nextThousand = Math.ceil(checkoutTotal / 1000) * 1000;
-    if (nextThousand !== checkoutTotal && checkoutTotal < 10000) options.push(nextThousand);
-    if (checkoutTotal < 5000 && !options.includes(5000)) options.push(5000);
-    if (checkoutTotal < 10000 && !options.includes(10000)) options.push(10000);
+    if (nextThousand > checkoutTotal) {
+        options.push(nextThousand);
+    }
+    
+    // 5000円と10000円は、請求額より大きければ常に出す
+    if (checkoutTotal < 5000) options.push(5000);
+    if (checkoutTotal < 10000) options.push(10000);
 
     // 重複を消して昇順ソート
     options = [...new Set(options)].sort((a, b) => a - b);
@@ -573,19 +562,15 @@
     });
   }
 
-  // テンキー入力処理
   function numpadInput(numStr) {
-    // 0始まりを防ぐ
     if (checkoutReceived === 0 && (numStr === '0' || numStr === '00')) return;
     
     let currentStr = checkoutReceived.toString();
-    // 丁度がセットされている状態で入力されたら、一度クリアして入力を受け付ける
-    if (checkoutReceived === checkoutTotal && currentStr.length > 2) {
+    if (checkoutReceived === checkoutTotal && currentStr.length >= 3) {
        currentStr = "";
     }
     
     currentStr += numStr;
-    // 桁数制限（最大6桁）
     if(currentStr.length > 6) return;
     
     checkoutReceived = parseInt(currentStr, 10);
@@ -607,7 +592,6 @@
     updateChangeDisplay();
   }
 
-  // おつりの計算と表示更新
   function updateChangeDisplay() {
     document.getElementById('modal-received-price').innerHTML = `${checkoutReceived.toLocaleString()} <span style="font-size:14px">円</span>`;
     
@@ -617,7 +601,7 @@
     
     if (change < 0) {
         changeEl.innerHTML = `<span style="color: #dc3545; font-size: 20px;">不足 ${Math.abs(change).toLocaleString()} 円</span>`;
-        completeBtn.disabled = true; // 不足時は会計完了できない
+        completeBtn.disabled = true; 
     } else {
         changeEl.innerHTML = `${change.toLocaleString()} <span style="font-size:14px">円</span>`;
         completeBtn.disabled = false;
@@ -667,7 +651,6 @@
   function checkout() {
     if (selectedIds.size === 0 && accumulatedTotal === 0) return;
     
-    // 会計確定処理
     selectedIds.forEach(id => { pendingCounts[id] = (pendingCounts[id] || 0) + 1; });
     courses.forEach(c => { if (!c.isDivider && pendingCounts[c.id]) c.count = (c.count || 0) + pendingCounts[c.id]; });
     saveData();
@@ -763,7 +746,6 @@
     if (!name) { alert("コース名を入力してください。"); return; }
     const newId = courses.length > 0 ? Math.max(...courses.map(c => c.id)) + 1 : 1;
     
-    // 直前のグループIDを引き継ぐ
     let lastGroupId = "";
     if (courses.length > 0) {
         let lastItem = courses[courses.length - 1];
