@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>水泳教室 料金計算ツール V9</title>
+<title>水泳教室 料金計算ツール </title>
 <style>
   :root { --primary: #0056b3; --success: #198754; --bg: #f8f9fa; --text: #212529; --card-bg: #ffffff; }
   body { font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -67,13 +67,14 @@
   .preview-btn { flex: 1.5; background-color: #0d6efd; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
   .preview-btn:active { transform: scale(0.95); }
 
-  /* V9: お客様確認モーダル */
+  /* V11: お客様確認モーダル */
   .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
   .modal-content { background: #fff; width: 100%; max-width: 500px; border-radius: 12px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 15px; }
   .modal-title { font-size: 20px; font-weight: bold; text-align: center; color: #343a40; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; margin-top: 0; }
-  .modal-items { background: #f8f9fa; border-radius: 8px; padding: 15px; font-size: 16px; max-height: 40vh; overflow-y: auto; }
+  .modal-items { background: #f8f9fa; border-radius: 8px; padding: 15px; font-size: 16px; max-height: 50vh; overflow-y: auto; }
   .modal-item-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed #dee2e6; padding-bottom: 4px; }
   .modal-discount { color: #dc3545; font-weight: bold; }
+  .person-divider { font-weight: bold; background: #e9ecef; color: #495057; padding: 4px 10px; border-radius: 4px; margin: 12px 0 8px 0; font-size: 14px; }
   .modal-grand-total { text-align: center; font-size: 24px; font-weight: bold; margin: 10px 0; }
   .modal-grand-total span { font-size: 40px; color: #dc3545; }
   .modal-actions { display: flex; gap: 10px; margin-top: 10px; }
@@ -109,7 +110,7 @@
 <body>
 
 <header>
-  <h1>🏊‍♂️ 水泳レジ V9</h1>
+  <h1>🏊‍♂️ 水泳レジ </h1>
   <div class="tabs">
     <button id="tab-calc" class="active" onclick="switchTab('calc')">受付画面</button>
     <button id="tab-settings" onclick="switchTab('settings')">⚙️ 設定</button>
@@ -196,13 +197,14 @@
     </div>
     
     <div class="action-buttons">
-      <button class="btn-add-person" onclick="addNextPerson()">➕ 兄弟合算</button>
+      <!-- V11: 複数人合算に名称変更 -->
+      <button class="btn-add-person" onclick="addNextPerson()">➕ 複数人合算</button>
       <button class="preview-btn" onclick="openPreviewModal()">👀 お会計・確認へ</button>
     </div>
   </div>
 </div>
 
-<!-- V9: お客様確認用モーダル -->
+<!-- V11: お客様確認用モーダル -->
 <div id="customer-modal" class="modal-overlay">
   <div class="modal-content">
     <h2 class="modal-title">お支払い内容のご確認</h2>
@@ -220,7 +222,6 @@
 </div>
 
 <script>
-  // V9: 大元データの更新（M火を削除し、一番下に市水中歩行を追加）
   const initData = [
     {"id":100, "isDivider": true, "name": "▼ 子供の教室"},
     {"id":1,"name":"O土","color":"#dddddd","priceMember":5700,"priceVisitor":7200,"count":0,"isFreeEligible":true,"isFull":false,"notice":""},
@@ -254,14 +255,20 @@
   
   let personIndex = 1;
   let accumulatedTotal = 0;
+  // V11: 確定した人の詳細履歴を保存する配列
+  let accumulatedHistory = []; 
   let pendingCounts = {}; 
   
-  // V9 モーダル用データ保持
   let currentDiscountName = "";
   let currentDiscountAmount = 0;
 
   function init() {
-    const saved = localStorage.getItem('swimFacilityCoursesV9');
+    let saved = localStorage.getItem('swimFacilityCoursesV11');
+    if (!saved) saved = localStorage.getItem('swimFacilityCoursesV10');
+    if (!saved) saved = localStorage.getItem('swimFacilityCoursesV9');
+    if (!saved) saved = localStorage.getItem('swimFacilityCoursesV8');
+    if (!saved) saved = localStorage.getItem('swimFacilityCoursesV7');
+
     if (saved) {
       courses = JSON.parse(saved);
       courses.forEach(c => { 
@@ -271,14 +278,14 @@
       });
     } else {
       courses = [...initData];
-      saveData();
     }
+    saveData();
     renderCalc();
     renderSettings();
   }
 
   function saveData() {
-    localStorage.setItem('swimFacilityCoursesV9', JSON.stringify(courses));
+    localStorage.setItem('swimFacilityCoursesV11', JSON.stringify(courses));
   }
 
   function switchTab(tab) {
@@ -402,7 +409,7 @@
     document.getElementById('total-display').innerText = finalTotal.toLocaleString();
   }
 
-  // V9: モーダルを開く処理
+  // V11: モーダルの内訳を詳細履歴から構築
   function openPreviewModal() {
     if (selectedIds.size === 0 && accumulatedTotal === 0) {
         alert("コースが選択されていません！");
@@ -412,25 +419,37 @@
     const listEl = document.getElementById('modal-item-list');
     listEl.innerHTML = '';
     
-    // 合算分がある場合
-    if (accumulatedTotal > 0) {
-        listEl.innerHTML += `<div class="modal-item-row"><span>兄弟合算分（前の方まで）</span> <span>¥${accumulatedTotal.toLocaleString()}</span></div>`;
-    }
-    
-    // 現在選択中のコース
-    courses.forEach(c => {
-      if (!c.isDivider && selectedIds.has(c.id)) {
-        const price = isMemberMode ? Number(c.priceMember) : Number(c.priceVisitor);
-        listEl.innerHTML += `<div class="modal-item-row"><span>${c.name} (${isMemberMode ? '会員' : '非会員'})</span> <span>¥${price.toLocaleString()}</span></div>`;
-      }
+    // 過去に確定した人（複数人合算分）の描画
+    accumulatedHistory.forEach(historyItem => {
+        // 見出し（1人目、2人目...）
+        listEl.innerHTML += `<div class="person-divider">👤 ${historyItem.person}人目</div>`;
+        
+        // 選択されたコース
+        historyItem.courses.forEach(c => {
+            listEl.innerHTML += `<div class="modal-item-row"><span>${c.name} (${c.type})</span> <span>¥${c.price.toLocaleString()}</span></div>`;
+        });
+        
+        // 割引が適用されていた場合
+        if (historyItem.discountAmount > 0) {
+            listEl.innerHTML += `<div class="modal-item-row modal-discount"><span>🎁 新規教室無料 (${historyItem.discountName})</span> <span>-¥${historyItem.discountAmount.toLocaleString()}</span></div>`;
+        }
     });
     
-    // 割引の表示
-    if (currentDiscountAmount > 0) {
-        listEl.innerHTML += `<div class="modal-item-row modal-discount"><span>🎁 新規無料 (${currentDiscountName})</span> <span>-¥${currentDiscountAmount.toLocaleString()}</span></div>`;
+    // 現在選択中（最後の人）の描画
+    if (selectedIds.size > 0) {
+        listEl.innerHTML += `<div class="person-divider">👤 ${personIndex}人目</div>`;
+        courses.forEach(c => {
+          if (!c.isDivider && selectedIds.has(c.id)) {
+            const price = isMemberMode ? Number(c.priceMember) : Number(c.priceVisitor);
+            listEl.innerHTML += `<div class="modal-item-row"><span>${c.name} (${isMemberMode ? '会員' : '非会員'})</span> <span>¥${price.toLocaleString()}</span></div>`;
+          }
+        });
+        
+        if (currentDiscountAmount > 0) {
+            listEl.innerHTML += `<div class="modal-item-row modal-discount"><span>🎁 新規教室無料 (${currentDiscountName})</span> <span>-¥${currentDiscountAmount.toLocaleString()}</span></div>`;
+        }
     }
     
-    // 合計金額の反映
     const finalTotal = document.getElementById('total-display').innerText;
     document.getElementById('modal-total-price').innerText = finalTotal;
     
@@ -441,17 +460,40 @@
     document.getElementById('customer-modal').style.display = 'none';
   }
 
+  // V11: 「複数人合算」ボタンを押したときに、その人の内訳を履歴配列に保存する
   function addNextPerson() {
     if (selectedIds.size === 0) { alert("コースが選択されていません！"); return; }
-    const currentSubtotal = parseInt(document.getElementById('subtotal-display').innerText.replace(/,/g, ''), 10);
-    accumulatedTotal += currentSubtotal;
+    
+    let personCourses = [];
+    let personSubtotal = 0;
+    
+    courses.forEach(c => {
+      if (!c.isDivider && selectedIds.has(c.id)) {
+        const price = isMemberMode ? Number(c.priceMember) : Number(c.priceVisitor);
+        personCourses.push({ id: c.id, name: c.name, price: price, type: isMemberMode ? '会員' : '非会員' });
+        personSubtotal += price;
+      }
+    });
+
+    accumulatedHistory.push({
+      person: personIndex,
+      courses: personCourses,
+      discountName: currentDiscountAmount > 0 ? currentDiscountName : "",
+      discountAmount: currentDiscountAmount
+    });
+
+    const currentSubtotalDisplay = parseInt(document.getElementById('subtotal-display').innerText.replace(/,/g, ''), 10);
+    accumulatedTotal += currentSubtotalDisplay;
+    
     selectedIds.forEach(id => { pendingCounts[id] = (pendingCounts[id] || 0) + 1; });
     selectedIds.clear();
     isFirstTimeFree = false;
+    
     if (isMemberMode) {
       document.getElementById('btn-free').classList.remove('active');
       document.getElementById('btn-free').innerText = '🎁 初回無料(新規) OFF';
     }
+    
     personIndex++;
     document.getElementById('current-person-label').innerText = `${personIndex}人目:`;
     document.getElementById('grand-total-row').style.display = 'flex';
@@ -464,7 +506,14 @@
     selectedIds.forEach(id => { pendingCounts[id] = (pendingCounts[id] || 0) + 1; });
     courses.forEach(c => { if (!c.isDivider && pendingCounts[c.id]) c.count = (c.count || 0) + pendingCounts[c.id]; });
     saveData();
-    selectedIds.clear(); pendingCounts = {}; accumulatedTotal = 0; personIndex = 1; isFirstTimeFree = false;
+    
+    selectedIds.clear(); 
+    pendingCounts = {}; 
+    accumulatedTotal = 0; 
+    accumulatedHistory = []; // 履歴もリセット
+    personIndex = 1; 
+    isFirstTimeFree = false;
+    
     if (isMemberMode) {
       document.getElementById('btn-free').classList.remove('active');
       document.getElementById('btn-free').innerText = '🎁 初回無料(新規) OFF';
@@ -472,7 +521,6 @@
     document.getElementById('current-person-label').innerText = `1人目の小計:`;
     document.getElementById('grand-total-row').style.display = 'none';
     
-    // モーダルを閉じる
     closePreviewModal();
     
     const btn = document.querySelector('.preview-btn');
@@ -583,7 +631,6 @@
       const parsed = JSON.parse(data);
       if(Array.isArray(parsed)) {
         courses = parsed;
-        // V9用に保存キーを変えてるので即保存
         saveData();
         renderSettings();
         alert("データを読み込みました！");
